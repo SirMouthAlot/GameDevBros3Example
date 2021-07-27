@@ -19,7 +19,7 @@ TextureImporter:
     second: Jump
   - first:
       213: 6264610148586154080
-    second: SmolMarioSprites_5
+    second: Walk 5
   - first:
       213: 5428938534669495486
     second: SmolMarioSprites_6
@@ -298,7 +298,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SmolMarioSprites_5
+      name: Walk 5
       rect:
         serializedVersion: 2
         x: 93

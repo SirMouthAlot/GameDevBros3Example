@@ -29,7 +29,13 @@ public class MarioController : MonoBehaviour
     {
         runInput = Input.GetAxis("Horizontal");
 
-        if (Input.GetAxis("Vertical") > 0)
+        if (runInput == 0)
+        {
+            isRunning = false;
+        }
+
+
+        if (Input.GetKey(KeyCode.W))
         {
             jumpInput = true;
         }
@@ -54,6 +60,8 @@ public class MarioController : MonoBehaviour
 
     void Run()
     {
+        isRunning = true;
+
         if (Mathf.Abs(body.velocity.x) >= maxSpeed)
         {
             return;
@@ -61,10 +69,12 @@ public class MarioController : MonoBehaviour
         if (runInput > 0)
         {
             body.AddForce(Vector2.right * runForce, ForceMode2D.Force);
+            trans.rotation = Quaternion.Euler(0, 180, 0);
         }
         if (runInput < 0)
         {
             body.AddForce(Vector2.left * runForce, ForceMode2D.Force);
+            trans.rotation = Quaternion.Euler(0, 0, 0);
         }
     }
 
@@ -83,5 +93,15 @@ public class MarioController : MonoBehaviour
                 isGrounded = true;
             }
         }
+    }
+
+    public bool GetIsRunning()
+    {
+        return isRunning;
+    }
+
+    public bool GetIsGrounded()
+    {
+        return isGrounded;
     }
 }
