@@ -84,15 +84,18 @@ public class MenuController : MonoBehaviour
 
     public void UpdateActiveMenuDefinition()
     {
-        //Grab out our menu definition from the active menu
+         //Grab out our menu definition from the active menu
         _activeMenuDefinition = _activeMenu.GetComponent<MenuDefinition>();
+
+        //Check if old active menu wanted us to continue music from old menu
+        bool continueFromOldMusic = _activeMenuDefinition._continuePrevMusic;
 
         if (_activeMenuDefinition._menuMusic != null)
         {
             _backgroundAudio.clip = _activeMenuDefinition._menuMusic;
             _backgroundAudio.Play();
         }
-        else
+        else if (!continueFromOldMusic)
         {
             _backgroundAudio.Stop();
         }
