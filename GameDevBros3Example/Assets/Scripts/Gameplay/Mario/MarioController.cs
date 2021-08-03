@@ -17,6 +17,10 @@ public class MarioController : MonoBehaviour
     float runInput;
     bool jumpInput;
 
+    bool deathStarted = false;
+
+    float deathPauseTimer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -43,16 +47,35 @@ public class MarioController : MonoBehaviour
         {
             jumpInput = false;
         }
+
+        if (runInput == 0 && body.velocity.y == 0)
+        {
+            body.drag = 3;
+        }
+        else
+        {
+            body.drag = 1;
+        }
+
+        if (trans.position.y <= -5 && !deathStarted)
+        {
+            StartDeath();
+        }
+
+        if (trans.position.y <= -7)
+        {
+            Die();
+        }
     }
 
     void FixedUpdate()
     {
-        if (runInput != 0)
+        if (runInput != 0 && !deathStarted)
         {
             Run();
         }
 
-        if (jumpInput && isGrounded)
+        if (jumpInput && isGrounded && !deathStarted)
         {
             Jump();
         }
@@ -78,9 +101,40 @@ public class MarioController : MonoBehaviour
         }
     }
 
+    void StartDeath()
+    {
+        body.velocity = Vector2.zero;
+
+        //deathPauseTimer = Time.realtimeSinceStartup + 0.5f;
+
+        //while(deathPauseTimer > Time.realtimeSinceStartup)
+        //{
+
+        //}
+
+        body.gravityScale = 3;
+
+        body.AddForce(Vector3.up * jumpForce / 2, ForceMode2D.Impulse);
+
+        GetComponent<Collider2D>().enabled = false;
+
+        deathStarted = true;
+    }
+
+    void Die()
+    {
+        Destroy(gameObject);
+    }
+
     void Jump()
     {
         body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        isGrounded = false;
+    }
+
+    void EnemyBounce()
+    {
+        body.AddForce(Vector2.up * jumpForce / 1.5f, ForceMode2D.Impulse);
         isGrounded = false;
     }
 
@@ -92,6 +146,23 @@ public class MarioController : MonoBehaviour
             {
                 isGrounded = true;
             }
+        }
+
+        if (collision.gameObject.tag == "Goomba")
+        {
+            if (collision.contacts[0].normal.y > 0.5)
+            {
+                EnemyBounce();
+                collision.gameObject.GetComponent<Goomba>().SetIsSquashed(true);
+            }
+            else
+            {
+                if (!collision.gameObject.GetComponent<Goomba>().GetIsSquashed())
+                {
+                    StartDeath();
+                }
+            }
+            
         }
     }
 

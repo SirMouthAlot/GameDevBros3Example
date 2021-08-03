@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class AnimController : MonoBehaviour
 {
-    Animator anim;
+    [SerializeField] GameObject mario;
+    [SerializeField] List<GameObject> goombas;
 
+    Animator marioAnimator;
     MarioController marioMovement;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        anim = GetComponent<Animator>();
-        marioMovement = GetComponent<MarioController>();
+        marioAnimator = mario.GetComponent<Animator>();
+        marioMovement = mario.GetComponent<MarioController>();
     }
 
     // Update is called once per frame
@@ -20,20 +23,35 @@ public class AnimController : MonoBehaviour
     {
         if (marioMovement.GetIsRunning())
         {
-            anim.SetBool("isWalking", true);
+            marioAnimator.SetBool("isWalking", true);
         }
         else
         {
-            anim.SetBool("isWalking", false);
+            marioAnimator.SetBool("isWalking", false);
         }
 
         if (marioMovement.GetIsGrounded())
         {
-            anim.SetBool("isJumping", false);
+            marioAnimator.SetBool("isJumping", false);
         }
         else
         {
-            anim.SetBool("isJumping", true);
+            marioAnimator.SetBool("isJumping", true);
+        }
+
+        for (int i = 0; i < goombas.Count; i++)
+        {
+            if (goombas[i] != null)
+            {
+                if (goombas[i].GetComponent<Goomba>().GetIsSquashed())
+                {
+                    goombas[i].GetComponent<Animator>().SetBool("Squashed", true);
+                }
+                else
+                {
+                    goombas[i].GetComponent<Animator>().SetBool("Squashed", false);
+                }
+            }
         }
     }
 }
