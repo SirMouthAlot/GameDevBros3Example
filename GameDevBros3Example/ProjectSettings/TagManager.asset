@@ -9,6 +9,7 @@ TagManager:
   - Standable
   - Block
   - Goomba
+  - Powerup
   layers:
   - Default
   - TransparentFX

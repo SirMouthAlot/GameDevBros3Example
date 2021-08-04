@@ -7,12 +7,16 @@ public class MarioController : MonoBehaviour
     [SerializeField] float runForce;
     [SerializeField] float jumpForce;
     [SerializeField] float maxSpeed;
+    [SerializeField] GameObject bigMarioPrefab;
+    [SerializeField] GameObject smallMarioPrefab;
 
     Transform trans;
     Rigidbody2D body;
 
     bool isRunning;
     bool isGrounded;
+    bool isDead;
+    bool isBig;
 
     float runInput;
     bool jumpInput;
@@ -103,6 +107,8 @@ public class MarioController : MonoBehaviour
 
     void StartDeath()
     {
+        isDead = true;
+
         body.velocity = Vector2.zero;
 
         //deathPauseTimer = Time.realtimeSinceStartup + 0.5f;
@@ -159,10 +165,28 @@ public class MarioController : MonoBehaviour
             {
                 if (!collision.gameObject.GetComponent<Goomba>().GetIsSquashed())
                 {
-                    StartDeath();
+                    if (isBig)
+                    {
+                        GetComponent<BoxCollider2D>().size = smallMarioPrefab.GetComponent<BoxCollider2D>().size;
+                        isBig = false;
+                    }
+                    else
+                    {
+                        StartDeath();
+                    }
                 }
             }
             
+        }
+
+        if (collision.gameObject.name.Contains("Mushroom"))
+        {
+            Destroy(collision.gameObject);
+
+            //MAKE MARIO BIG HERE//
+            isBig = true;
+
+            GetComponent<BoxCollider2D>().size = bigMarioPrefab.GetComponent<BoxCollider2D>().size;
         }
     }
 
@@ -174,5 +198,15 @@ public class MarioController : MonoBehaviour
     public bool GetIsGrounded()
     {
         return isGrounded;
+    }
+
+    public bool GetIsDead()
+    {
+        return isDead;
+    }
+
+    public bool GetIsBig()
+    {
+        return isBig;
     }
 }

@@ -39,6 +39,24 @@ public class AnimController : MonoBehaviour
             marioAnimator.SetBool("isJumping", true);
         }
 
+        if (marioMovement.GetIsDead())
+        {
+            marioAnimator.SetBool("isDead", true);
+        }
+        else
+        {
+            marioAnimator.SetBool("isDead", false);
+        }
+
+        if (marioMovement.GetIsBig())
+        {
+            marioAnimator.SetBool("isBig", true);
+        }
+        else
+        {
+            marioAnimator.SetBool("isBig", false);
+        }
+
         for (int i = 0; i < goombas.Count; i++)
         {
             if (goombas[i] != null)

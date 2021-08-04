@@ -49,6 +49,11 @@ public class BlockHit : MonoBehaviour
 
             gameManager.GetComponent<CoinCounter>().AddCoin(1);
         }
+        else if (blockItem.CompareTag("Powerup"))
+        {
+            item = Instantiate(blockItem, transform.position + new Vector3(0, 1.01f, 0), Quaternion.Euler(0, 0, 0));
+            item.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 5, ForceMode2D.Impulse);
+        }
 
         blockHitActionPerformed = true;
     }

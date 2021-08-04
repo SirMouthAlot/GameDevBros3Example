@@ -5,10 +5,10 @@ using UnityEngine;
 public class Goomba : MonoBehaviour
 {
     bool isSquashed = false;
-
-    bool movingLeft = true;
+    bool movingLeft = false;
 
     float flipTimer = 0f;
+    float speed = 1.5f;
 
     // Update is called once per frame
     void Update()
@@ -34,11 +34,11 @@ public class Goomba : MonoBehaviour
     {
         if (movingLeft)
         {
-            transform.position += Vector3.left * Time.deltaTime;
+            transform.position += Vector3.left * Time.deltaTime * speed;
         }
         else
         {
-            transform.position += Vector3.right * Time.deltaTime;
+            transform.position += Vector3.right * Time.deltaTime * speed;
         }
     }
 
