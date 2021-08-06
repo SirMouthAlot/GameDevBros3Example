@@ -8,6 +8,9 @@ TagManager:
   - Pipe
   - Standable
   - Block
+  - Goomba
+  - Powerup
+  - Koopa
   layers:
   - Default
   - TransparentFX
