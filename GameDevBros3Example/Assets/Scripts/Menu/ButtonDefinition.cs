@@ -6,11 +6,15 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Button))]
 public class ButtonDefinition : MonoBehaviour
 {
+    public bool _animated = false;
+    public Color _unselectedTint = Color.grey;
+    public Color _selectedTint = Color.white;
     public bool _selected = false;
     public AudioClip _swapToSFX;
     public AudioClip _confirmSFX;
     public float _confirmTime;
     private Button _button;
+    private Image _image;
     private Animator _animator;
 
 
@@ -18,7 +22,22 @@ public class ButtonDefinition : MonoBehaviour
     {
         _button = GetComponent<Button>();
 
-        TryGetComponent<Animator>(out _animator);
+        _image = GetComponent<Image>();
+
+        //Is this item animated
+        _animated = TryGetComponent<Animator>(out _animator);
+
+        if (!_animated)
+        {
+            if (_selected)
+            {
+                _image.color = _selectedTint;
+            }
+            else
+            {
+                _image.color = _unselectedTint;
+            }
+        }
     }
 
     public void SwappedTo()
@@ -37,6 +56,12 @@ public class ButtonDefinition : MonoBehaviour
         {
             _animator.SetBool("Selected", _selected);
         }
+
+        //If not animated, tint the button to show selected
+        if (!_animated)
+        {
+            _image.color = _selectedTint;
+        }
     }
 
     public void SwappedOff()
@@ -48,6 +73,12 @@ public class ButtonDefinition : MonoBehaviour
         if (_animator != null)
         {
             _animator.SetBool("Selected", _selected);
+        }
+
+        //If not animated, tint the button to show selected
+        if (!_animated)
+        {
+            _image.color = _unselectedTint;
         }
     }
 
