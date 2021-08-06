@@ -9,6 +9,7 @@ public class MarioController : MonoBehaviour
     [SerializeField] float maxSpeed;
     [SerializeField] GameObject bigMarioPrefab;
     [SerializeField] GameObject smallMarioPrefab;
+    [SerializeField] GameObject gameManager;
 
     Transform trans;
     Rigidbody2D body;
@@ -30,6 +31,8 @@ public class MarioController : MonoBehaviour
     {
         trans = GetComponent<Transform>();
         body = GetComponent<Rigidbody2D>();
+
+        FindObjectOfType<AudioManager>().Play("Music");
     }
 
     // Update is called once per frame
@@ -107,6 +110,9 @@ public class MarioController : MonoBehaviour
 
     void StartDeath()
     {
+        FindObjectOfType<AudioManager>().Stop("Music");
+        FindObjectOfType<AudioManager>().Play("GameOver");
+
         isDead = true;
 
         body.velocity = Vector2.zero;
@@ -129,13 +135,15 @@ public class MarioController : MonoBehaviour
 
     void Die()
     {
-        Destroy(gameObject);
+        gameManager.GetComponent<LevelStatus>().SetLevelFailed(true);
     }
 
     void Jump()
     {
         body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         isGrounded = false;
+
+        FindObjectOfType<AudioManager>().Play("Jump");
     }
 
     void EnemyBounce()
@@ -160,6 +168,9 @@ public class MarioController : MonoBehaviour
             {
                 EnemyBounce();
                 collision.gameObject.GetComponent<Goomba>().SetIsSquashed(true);
+                gameManager.GetComponent<ScoreCounter>().AddScore(1000);
+
+                FindObjectOfType<AudioManager>().Play("Bump");
             }
             else
             {
@@ -169,6 +180,8 @@ public class MarioController : MonoBehaviour
                     {
                         GetComponent<BoxCollider2D>().size = smallMarioPrefab.GetComponent<BoxCollider2D>().size;
                         isBig = false;
+
+                        FindObjectOfType<AudioManager>().Play("PowerDown");
                     }
                     else
                     {
@@ -176,17 +189,81 @@ public class MarioController : MonoBehaviour
                     }
                 }
             }
-            
+        }
+
+        if (collision.gameObject.tag == "Koopa")
+        {
+            if (collision.contacts[0].normal.y > 0.5 && !collision.gameObject.GetComponent<RedKoopa>().GetIsSquashed())
+            {
+                EnemyBounce();
+                collision.gameObject.GetComponent<RedKoopa>().SetIsSquashed(true);
+                collision.gameObject.GetComponent<RedKoopa>().SetIsMoving(false);
+
+                collision.gameObject.GetComponent<BoxCollider2D>().size = new Vector2(1, 1);
+
+                gameManager.GetComponent<ScoreCounter>().AddScore(1000);
+
+                FindObjectOfType<AudioManager>().Play("Bump");
+            }
+            else if (collision.gameObject.GetComponent<RedKoopa>().GetIsSquashed() && !collision.gameObject.GetComponent<RedKoopa>().GetIsKicked())
+            {
+                if (collision.gameObject.transform.position.x > transform.position.x)
+                {
+                    collision.gameObject.GetComponent<RedKoopa>().ApplyKickForce(new Vector2(1, 0));
+                }
+                if (collision.gameObject.transform.position.x < transform.position.x)
+                {
+                    collision.gameObject.GetComponent<RedKoopa>().ApplyKickForce(new Vector2(-1, 0));
+                }
+            }
+            else if (collision.contacts[0].normal.y > 0.5 && collision.gameObject.GetComponent<RedKoopa>().GetIsKicked())
+            {
+                EnemyBounce();
+                collision.gameObject.GetComponent<RedKoopa>().SetIsKicked(false);
+                collision.gameObject.GetComponent<RedKoopa>().SetIsMoving(false);
+
+                collision.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(0, collision.gameObject.GetComponent<Rigidbody2D>().velocity.y);
+
+                gameManager.GetComponent<ScoreCounter>().AddScore(100);
+            }
+            else
+            {
+                if (collision.gameObject.GetComponent<RedKoopa>().GetIsMoving())
+                {
+                    if (isBig)
+                    {
+                        GetComponent<BoxCollider2D>().size = smallMarioPrefab.GetComponent<BoxCollider2D>().size;
+                        isBig = false;
+
+                        FindObjectOfType<AudioManager>().Play("PowerDown");
+                    }
+                    else
+                    {
+                        StartDeath();
+                    }
+                }
+            }
         }
 
         if (collision.gameObject.name.Contains("Mushroom"))
         {
-            Destroy(collision.gameObject);
+            FindObjectOfType<AudioManager>().Play("Powerup");
 
-            //MAKE MARIO BIG HERE//
-            isBig = true;
+            if (!isBig)
+            {
+                Destroy(collision.gameObject);
 
-            GetComponent<BoxCollider2D>().size = bigMarioPrefab.GetComponent<BoxCollider2D>().size;
+                isBig = true;
+
+                GetComponent<BoxCollider2D>().size = bigMarioPrefab.GetComponent<BoxCollider2D>().size;
+
+            }
+            else
+            {
+                Destroy(collision.gameObject);
+
+                gameManager.GetComponent<ScoreCounter>().AddScore(500);
+            }
         }
     }
 

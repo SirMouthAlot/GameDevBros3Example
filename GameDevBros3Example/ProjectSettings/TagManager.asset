@@ -10,6 +10,7 @@ TagManager:
   - Block
   - Goomba
   - Powerup
+  - Koopa
   layers:
   - Default
   - TransparentFX

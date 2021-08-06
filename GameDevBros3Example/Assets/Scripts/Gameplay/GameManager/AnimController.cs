@@ -6,6 +6,7 @@ public class AnimController : MonoBehaviour
 {
     [SerializeField] GameObject mario;
     [SerializeField] List<GameObject> goombas;
+    [SerializeField] List<GameObject> koopas;
 
     Animator marioAnimator;
     MarioController marioMovement;
@@ -68,6 +69,30 @@ public class AnimController : MonoBehaviour
                 else
                 {
                     goombas[i].GetComponent<Animator>().SetBool("Squashed", false);
+                }
+            }
+        }
+
+        for (int i = 0; i < koopas.Count; i++)
+        {
+            if (koopas[i] != null)
+            {
+                if (koopas[i].GetComponent<RedKoopa>().GetIsSquashed())
+                {
+                    koopas[i].GetComponent<Animator>().SetBool("isSquashed", true);
+                }
+                else
+                {
+                    koopas[i].GetComponent<Animator>().SetBool("isSquashed", false);
+                }
+
+                if (koopas[i].GetComponent<RedKoopa>().GetIsKicked())
+                {
+                    koopas[i].GetComponent<Animator>().SetBool("isKicked", true);
+                }
+                else
+                {
+                    koopas[i].GetComponent<Animator>().SetBool("isKicked", false);
                 }
             }
         }
