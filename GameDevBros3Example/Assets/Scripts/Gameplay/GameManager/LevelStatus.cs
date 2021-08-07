@@ -7,9 +7,11 @@ public class LevelStatus : MonoBehaviour
 {
     bool levelCompleted = false;
     bool levelFailed = false;
+    bool gameOver = false;
 
     public string _levelFailedScene;
     public string _levelCompleteScene;
+    public string _gameOverScene;
     
     // Update is called once per frame
     void Update()
@@ -24,9 +26,17 @@ public class LevelStatus : MonoBehaviour
 
         if (levelFailed)
         {
-            if (!FindObjectOfType<AudioManager>().IsPlaying("GameOver"))
+            if (!FindObjectOfType<AudioManager>().IsPlaying("LifeLost"))
             {
                 SceneManager.LoadScene(_levelFailedScene);
+            }
+        }
+
+        if (gameOver)
+        {
+            if (!FindObjectOfType<AudioManager>().IsPlaying("GameOver"))
+            {
+                SceneManager.LoadScene(_gameOverScene);
             }
         }
     }
@@ -39,5 +49,10 @@ public class LevelStatus : MonoBehaviour
     public void SetLevelFailed(bool failed)
     {
         levelFailed = failed;
+    }
+
+    public void SetGameOver(bool isGameOver)
+    {
+        gameOver = isGameOver;
     }
 }
