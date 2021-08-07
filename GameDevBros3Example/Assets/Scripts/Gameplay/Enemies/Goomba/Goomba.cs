@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Goomba : MonoBehaviour
 {
+    public float dieTimer = 0.2f;
+
     bool isSquashed = false;
     bool movingLeft = false;
 
@@ -20,7 +22,7 @@ public class Goomba : MonoBehaviour
 
         if (isSquashed)
         {
-            Destroy(gameObject, 1);
+            Destroy(gameObject, dieTimer);
         }
 
         if (flipTimer <= Time.realtimeSinceStartup)

@@ -8,10 +8,13 @@ public class Coin : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        gameManager.GetComponent<CoinCounter>().AddCoin(1);
-        gameManager.GetComponent<ScoreCounter>().AddScore(100);
-        Destroy(gameObject);
+        if (gameManager != null)
+        {
+            gameManager.GetComponent<CoinCounter>().AddCoin(1);
+            gameManager.GetComponent<ScoreCounter>().AddScore(100);
+            Destroy(gameObject);
 
-        FindObjectOfType<AudioManager>().Play("Coin");
+            FindObjectOfType<AudioManager>().Play("Coin");
+        }
     }
 }

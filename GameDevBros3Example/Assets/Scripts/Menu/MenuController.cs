@@ -62,24 +62,30 @@ public class MenuController : MonoBehaviour
                 ClickCurrentButton();
             }
         }
-        
 
         _activeButton = newActive;
     }
 
     private int SwitchCurrentButton(int increment)
     {
-        int newActive = Utility.WrapAround(_activeMenuDefinition.GetButtonCount(), _activeButton, increment);
+        if (!_activeMenuDefinition.GetButtonDefinitions()[_activeButton]._disableControls)
+        {
+            int newActive = Utility.WrapAround(_activeMenuDefinition.GetButtonCount(), _activeButton, increment);
 
-        _activeMenuDefinition.GetButtonDefinitions()[_activeButton].SwappedOff();
-        _activeMenuDefinition.GetButtonDefinitions()[newActive].SwappedTo();
+            _activeMenuDefinition.GetButtonDefinitions()[_activeButton].SwappedOff();
+            _activeMenuDefinition.GetButtonDefinitions()[newActive].SwappedTo();
 
-        return newActive;
+            return newActive;
+        }
+        return _activeButton;
     }
 
     private void ClickCurrentButton()
     {
-        StartCoroutine(_activeMenuDefinition.GetButtonDefinitions()[_activeButton].ClickButton());
+        if (!_activeMenuDefinition.GetButtonDefinitions()[_activeButton]._disableControls)
+        {
+            StartCoroutine(_activeMenuDefinition.GetButtonDefinitions()[_activeButton].ClickButton());
+        }
     }
 
     public void UpdateActiveMenuDefinition()

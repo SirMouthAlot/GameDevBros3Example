@@ -37,16 +37,12 @@ public class LevelCompleteSquare : MonoBehaviour
     {
         if (changeTimer < Time.realtimeSinceStartup)
         {
-            int choice = (int)Random.Range(0, 5);
-
-            if (choice == 5)
-            {
-                choice = 4;
-            }
+            int choice = (int)Random.Range(0, powerupList.Count-1);
 
             if (choice == previousChoice)
             {
-                choice++;
+                ChangeImage();
+                return;
             }
 
             GetComponent<SpriteRenderer>().sprite = powerupList[choice];
