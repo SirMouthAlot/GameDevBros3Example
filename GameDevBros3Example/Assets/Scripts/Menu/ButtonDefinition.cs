@@ -17,6 +17,8 @@ public class ButtonDefinition : MonoBehaviour
     private Image _image;
     private Animator _animator;
 
+    public bool _disableControls = false;
+
 
     private void Start()
     {
@@ -84,15 +86,22 @@ public class ButtonDefinition : MonoBehaviour
 
     public IEnumerator ClickButton()
     {
-        //If there's SFX for confirming button, play it
-        if (_confirmSFX != null)
+        if (!_disableControls)
         {
-            AudioSource.PlayClipAtPoint(_confirmSFX, Vector3.zero);
+            _disableControls = true;
+
+            //If there's SFX for confirming button, play it
+            if (_confirmSFX != null)
+            {
+                AudioSource.PlayClipAtPoint(_confirmSFX, Vector3.zero);
+            }
+
+            yield return new WaitForSeconds(_confirmTime);
+
+            //Invoke button click
+            _button.onClick.Invoke();
+
+            _disableControls = false;
         }
-
-        yield return new WaitForSeconds(_confirmTime);
-
-        //Invoke button click
-        _button.onClick.Invoke();
     }
 }

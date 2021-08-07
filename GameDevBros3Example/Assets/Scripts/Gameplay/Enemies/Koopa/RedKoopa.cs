@@ -105,6 +105,8 @@ public class RedKoopa : MonoBehaviour
                 Destroy(collision.gameObject, 2);
 
                 FindObjectOfType<AudioManager>().Play("Bump");
+
+                ApplyKickForce(new Vector2(-collision.contacts[0].normal.normalized.x, 0));
             }
 
         }

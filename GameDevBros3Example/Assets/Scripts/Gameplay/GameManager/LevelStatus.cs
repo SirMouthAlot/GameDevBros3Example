@@ -8,6 +8,9 @@ public class LevelStatus : MonoBehaviour
     bool levelCompleted = false;
     bool levelFailed = false;
 
+    public string _levelFailedScene;
+    public string _levelCompleteScene;
+    
     // Update is called once per frame
     void Update()
     {
@@ -15,7 +18,7 @@ public class LevelStatus : MonoBehaviour
         {
             if (!FindObjectOfType<AudioManager>().IsPlaying("LevelClear"))
             {
-                SceneManager.LoadScene("MainMenu");
+                SceneManager.LoadScene(_levelCompleteScene);
             }
         }
 
@@ -23,7 +26,7 @@ public class LevelStatus : MonoBehaviour
         {
             if (!FindObjectOfType<AudioManager>().IsPlaying("GameOver"))
             {
-                SceneManager.LoadScene("World1-1");
+                SceneManager.LoadScene(_levelFailedScene);
             }
         }
     }
