@@ -110,8 +110,18 @@ public class MarioController : MonoBehaviour
 
     void StartDeath()
     {
+        FindObjectOfType<Lives>().LoseLife();
+
         FindObjectOfType<AudioManager>().Stop("Music");
-        FindObjectOfType<AudioManager>().Play("GameOver");
+
+        if (FindObjectOfType<Lives>().GetCurrentLives() < 1)
+        {
+            FindObjectOfType<AudioManager>().Play("GameOver");
+        }
+        else
+        {
+            FindObjectOfType<AudioManager>().Play("LifeLost");
+        }
 
         isDead = true;
 
@@ -135,7 +145,14 @@ public class MarioController : MonoBehaviour
 
     void Die()
     {
-        gameManager.GetComponent<LevelStatus>().SetLevelFailed(true);
+        if (FindObjectOfType<Lives>().GetCurrentLives() < 1)
+        {
+            gameManager.GetComponent<LevelStatus>().SetGameOver(true);
+        }
+        else
+        {
+            gameManager.GetComponent<LevelStatus>().SetLevelFailed(true);
+        }
     }
 
     void Jump()
