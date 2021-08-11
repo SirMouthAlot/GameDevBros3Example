@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class MarioController : MonoBehaviour
 {
+    //Character Controller//
     [SerializeField] float runForce;
     [SerializeField] float jumpForce;
     [SerializeField] float maxSpeed;
+
+    //Powerups//
     [SerializeField] GameObject bigMarioPrefab;
     [SerializeField] GameObject smallMarioPrefab;
+
+    //Game Manager//
     [SerializeField] GameObject gameManager;
 
+    //Character Controller//
     Transform trans;
     Rigidbody2D body;
 
@@ -19,16 +25,17 @@ public class MarioController : MonoBehaviour
     bool isDead;
     bool isBig;
 
+    //Character Controller//
     float runInput;
     bool jumpInput;
 
+    //Win/Loss
     bool deathStarted = false;
-
-    float deathPauseTimer;
 
     // Start is called before the first frame update
     void Start()
     {
+        //Character Controller//
         trans = GetComponent<Transform>();
         body = GetComponent<Rigidbody2D>();
 
@@ -38,6 +45,7 @@ public class MarioController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Character Controller//
         runInput = Input.GetAxis("Horizontal");
 
         if (runInput == 0)
@@ -63,7 +71,9 @@ public class MarioController : MonoBehaviour
         {
             body.drag = 1;
         }
+        ////////////////////////
 
+        //Win/Loss//
         if (trans.position.y <= -5 && !deathStarted)
         {
             StartDeath();
@@ -77,6 +87,7 @@ public class MarioController : MonoBehaviour
 
     void FixedUpdate()
     {
+        //Character Controller//
         if (runInput != 0 && !deathStarted)
         {
             Run();
@@ -90,6 +101,7 @@ public class MarioController : MonoBehaviour
 
     void Run()
     {
+        //Character Controller//
         isRunning = true;
 
         if (Mathf.Abs(body.velocity.x) >= maxSpeed)
@@ -127,13 +139,6 @@ public class MarioController : MonoBehaviour
 
         body.velocity = Vector2.zero;
 
-        //deathPauseTimer = Time.realtimeSinceStartup + 0.5f;
-
-        //while(deathPauseTimer > Time.realtimeSinceStartup)
-        //{
-
-        //}
-
         body.gravityScale = 3;
 
         body.AddForce(Vector3.up * jumpForce / 2, ForceMode2D.Impulse);
@@ -157,6 +162,7 @@ public class MarioController : MonoBehaviour
 
     void Jump()
     {
+        //Character Controller//
         body.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         isGrounded = false;
 
@@ -171,6 +177,7 @@ public class MarioController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        //Character Controller//
         for (int i = 0; i < collision.contacts.Length; i++)
         {
             if (collision.contacts[i].normal.y > 0.5)
@@ -178,7 +185,7 @@ public class MarioController : MonoBehaviour
                 isGrounded = true;
             }
         }
-
+        ////////////////////////
         if (collision.gameObject.tag == "Goomba")
         {
             if (collision.contacts[0].normal.y > 0.5)
